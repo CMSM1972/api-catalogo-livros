@@ -1,30 +1,34 @@
 package br.com.catalogodelivros.api.livro;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*; // Usar * importa tudo que precisamos do pacote
 import org.springframework.web.util.UriComponentsBuilder;
+import java.util.List;
 
-@RestController // 1. Define a classe como um Controller REST.
-@RequestMapping("/livros") // 2. Define um prefixo de URL para todos os métodos deste controller.
+@RestController
+@RequestMapping("/livros")
 public class LivroController {
 
-    private final LivroService livroService; // 3. Injeção de dependência do nosso serviço.
+    private final LivroService livroService;
 
     public LivroController(LivroService livroService) {
         this.livroService = livroService;
     }
 
-    @PostMapping // 4. Mapeia este método para o verbo HTTP POST na URL /livros.
-    public ResponseEntity<Livro> cadastrar(@RequestBody Livro livro, UriComponentsBuilder uriBuilder) { // 5.
+    @PostMapping
+    public ResponseEntity<Livro> cadastrar(@RequestBody Livro livro, UriComponentsBuilder uriBuilder) {
         Livro livroSalvo = livroService.cadastrar(livro);
 
-        // 6. Construindo a URL de retorno (boa prática REST).
         var uri = uriBuilder.path("/livros/{id}").buildAndExpand(livroSalvo.getId()).toUri();
 
-        // 7. Retorna o status 201 Created com a URL e o objeto criado.
         return ResponseEntity.created(uri).body(livroSalvo);
-    }
-}
+    } // FIM do método cadastrar
+
+    // O método listarTodos() começa AQUI, DEPOIS que o outro terminou.
+    @GetMapping
+    public ResponseEntity<List<Livro>> listarTodos() {
+        List<Livro> livros = livroService.listarTodos();
+        return ResponseEntity.ok(livros);
+    } // FIM do método listarTodos
+
+} // FIM da classe LivroController
