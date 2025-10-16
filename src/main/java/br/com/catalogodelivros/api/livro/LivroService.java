@@ -2,6 +2,7 @@ package br.com.catalogodelivros.api.livro;
 
 import org.springframework.stereotype.Service;
 import java.util.List; // Adicione este import, pois estamos usando List<Livro>
+import java.util.Optional;
 
 @Service
 public class LivroService {
@@ -22,5 +23,10 @@ public class LivroService {
     // O método listarTodos COMEÇA AQUI, do lado de fora
     public List<Livro> listarTodos() {
         return livroRepository.findAll();
+    }
+    // ... dentro da classe LivroService ...
+
+    public Optional<Livro> buscarPorId(Long id) {
+        return livroRepository.findById(id);
     }
 }

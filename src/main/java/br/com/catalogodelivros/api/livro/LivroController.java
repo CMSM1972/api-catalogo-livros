@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*; // Usar * importa tudo que precisamos do pacote
 import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
+import org.springframework.web.bind.annotation.PathVariable;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/livros")
@@ -30,5 +32,17 @@ public class LivroController {
         List<Livro> livros = livroService.listarTodos();
         return ResponseEntity.ok(livros);
     } // FIM do método listarTodos
+    // ... dentro da classe LivroController ...
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Livro> buscarPorId(@PathVariable Long id) {
+        Optional<Livro> livroOptional = livroService.buscarPorId(id);
+
+        if (livroOptional.isPresent()) {
+            return ResponseEntity.ok(livroOptional.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 } // FIM da classe LivroController
